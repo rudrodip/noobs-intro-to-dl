@@ -43,3 +43,21 @@ for k in range(200):
 
   # tune
   W.data += -LEARNING_RATE * W.grad
+
+
+# sampling
+for i in range(5):
+  word = ''
+  ix = 0
+
+  while True:
+    xenc = F.one_hot(torch.tensor([ix]), num_classes=27).float()
+    logits = xenc @ W
+    counts = logits.exp()
+    probs = counts / counts.sum(1, keepdims=True)
+
+    ix = torch.multinomial(probs, num_samples=1, replacement=True).item()
+    word += itos[ix]
+    if ix == 0:
+      break
+  print(word)
